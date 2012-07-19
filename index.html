@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="index.js"><meta name="groc-github-url" content="https://github.com/dokipen/dokipen"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/dokipen/dokipen/blob/master/index.js">index.js</a></div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><h1 id="connect-statsd">Connect StatsD</h1>
+
+<p><img src="http://static.embed.ly/connect-statsd/logo.png" alt="logo" title="Connect StatsD" /></p>
+
+<p>StatsD middleware for connect.</p></div></div><div class="code"><div class="wrapper"><span class="cm">/*</span>
+<span class="cm"> * Copyright (c) 2012 Bob Corsaro</span>
+<span class="cm"> *</span>
+<span class="cm"> * Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="cm"> * of this software and associated documentation files (the &quot;Software&quot;), to</span>
+<span class="cm"> * deal in the Software without restriction, including without limitation the</span>
+<span class="cm"> * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or</span>
+<span class="cm"> * sell copies of the Software, and to permit persons to whom the Software is</span>
+<span class="cm"> * furnished to do so, subject to the following conditions:</span>
+<span class="cm"> *</span>
+<span class="cm"> * The above copyright notice and this permission notice shall be included in</span>
+<span class="cm"> * all copies or substantial portions of the Software.</span>
+<span class="cm"> *</span>
+<span class="cm"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="cm"> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="cm"> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="cm"> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="cm"> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING</span>
+<span class="cm"> * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS</span>
+<span class="cm"> * IN THE SOFTWARE.</span>
+<span class="cm"> */</span>
+
+
+<span class="kd">var</span> <span class="nx">bb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;batbelt&#39;</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">StatsD</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-statsd&#39;</span><span class="p">).</span><span class="nx">StatsD</span>
+  <span class="p">,</span> <span class="nx">os</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">hostname</span> <span class="o">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">hostname</span><span class="p">()</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><hr />
+
+<p><code>connect-statsd</code> middleware sends metrics for requests to statsd.
+Currently implemented metrics are::</p>
+
+<ul>
+<li>requests : count requests</li>
+<li>time_firstbyte : elapsed time of request when first byte was written
+to the client</li>
+</ul>
+
+<p>Options:</p>
+
+<ul>
+<li>prefix : metric prefix to be appended to the metric name.
+(default: connect.$(hostname))</li>
+<li>host : statsd host.
+(default: localhost)</li>
+<li>port : statsd port.
+(default: 8125)</li>
+</ul></div></div><div class="code"><div class="wrapper"><span class="nx">exports</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">bb</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span>
+        <span class="p">{</span> <span class="nx">prefix</span><span class="o">:</span> <span class="s1">&#39;connect.&#39;</span><span class="o">+</span><span class="nx">hostname</span>
+        <span class="p">,</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span>
+        <span class="p">,</span> <span class="nx">port</span><span class="o">:</span> <span class="mi">8125</span> <span class="p">},</span> <span class="nx">opts</span><span class="p">)</span>
+    <span class="p">,</span> <span class="nx">statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StatsD</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">host</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">port</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">statsd</span><span class="p">.</span><span class="nx">increment</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">prefix</span><span class="o">+</span><span class="s2">&quot;.requests&quot;</span><span class="p">)</span>
+
+    <span class="kd">var</span> <span class="nx">writeHead</span> <span class="o">=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span>
+      <span class="p">,</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">statsd</span><span class="p">.</span><span class="nx">timing</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">prefix</span><span class="o">+</span><span class="s2">&quot;.time_firstbyte&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span> <span class="o">=</span> <span class="nx">writeHead</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="nx">next</span><span class="p">()</span> <span class="p">}</span> <span class="p">}</span></div></div></div></div></body></html>
