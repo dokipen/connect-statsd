@@ -1,24 +1,34 @@
-{ "name": "connect-statsd"
-, "version": "0.0.1"
-, "description": "Send requests to statsd."
-, "homepage": "https://github.com/dokipen/connect-statsd"
-, "keywords": ["connect", "middleware", "statsd"]
-, "author":
-  { "name": "Bob Corsaro"
-  , "email": "rcorsaro@gmail.com"
-  , "url": "http://www.google.com/profiles/rcorsaro"
-  }
-, "repository":
-  { "type": "git"
-  , "url": "git://github.com/dokipen/connect-statsd"
-  }
-, "bugs": { "url": "http://github.com/dokipen/connect-statsd/issues/" }
-, "dependencies":
-  { "node-statsd": ""
-  , "batbelt": "" }
-, "devDependencies":
-  { "groc": "" }
-, "scripts":
-  { "publish-doc": "node_modules/.bin/groc --github index.js" }
-, "main": "./index.js"
+{
+  "name": "connect-statsd",
+  "version": "0.1.0",
+  "description": "Send requests to statsd.",
+  "homepage": "https://github.com/dokipen/connect-statsd",
+  "keywords": [
+    "connect",
+    "middleware",
+    "statsd"
+  ],
+  "author": {
+    "name": "Bob Corsaro",
+    "email": "rcorsaro@gmail.com",
+    "url": "http://www.google.com/profiles/rcorsaro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dokipen/connect-statsd"
+  },
+  "bugs": {
+    "url": "http://github.com/dokipen/connect-statsd/issues/"
+  },
+  "dependencies": {
+    "node-statsd": "",
+    "batbelt": ""
+  },
+  "devDependencies": {
+    "groc": ""
+  },
+  "scripts": {
+    "publish-doc": "node_modules/.bin/groc --github index.js"
+  },
+  "main": "./index.js"
 }
