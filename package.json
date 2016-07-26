@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "node-statsd": "",
-    "batbelt": ""
+    "lodash": ""
   },
   "devDependencies": {
     "groc": ""

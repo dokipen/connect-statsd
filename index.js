@@ -27,7 +27,7 @@
  */
 
 
-var bb = require('batbelt')
+var _ = require('lodash')
   , StatsD = require('node-statsd').StatsD
   , os = require('os')
   , hostname = os.hostname()
@@ -51,7 +51,7 @@ var bb = require('batbelt')
 //    (default: 8125)
 //
 exports = module.exports = function(opts) {
-  var config = bb.merge(
+  var config = _.merge(
         { prefix: 'connect.'+hostname
         , host: 'localhost'
         , port: 8125 }, opts)
