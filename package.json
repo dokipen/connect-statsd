@@ -1,6 +1,6 @@
 {
   "name": "connect-statsd",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Send requests to statsd.",
   "homepage": "https://github.com/dokipen/connect-statsd",
   "keywords": [
